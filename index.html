@@ -3,33 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript with Iframe</title>
+    <title>YouTube Video from MySQL</title>
 </head>
 <body>
 
-    <h1>Embedded YouTube Video in JavaScript</h1>
+<h1>Embedded YouTube Video</h1>
+<div id="video-container">Loading video...</div>
 
-    <!-- Iframe will be inserted here -->
-    <div id="video-container"></div>
+<script>
+    // Fetch video ID from the PHP API
+    fetch('get-video.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.videoId) {
+                // Create iframe
+                const iframe = document.createElement("iframe");
+                iframe.width = "560";
+                iframe.height = "315";
+                iframe.src = `https://www.youtube.com/embed/${data.videoId}`;
+                iframe.title = "YouTube video player";
+                iframe.frameBorder = "0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                iframe.allowFullscreen = true;
 
-    <script>
-        // YouTube video ID
-        const videoId = "Bcc97YC18Z0";
-        const playlistId = "PL2WFgdVk-usFBEBfk6TVrlHyyaFg0Z1Kg";
-
-        // Create iframe element
-        const iframe = document.createElement("iframe");
-        iframe.width = "560";
-        iframe.height = "315";
-        iframe.src = `https://www.youtube.com/embed/${videoId}?list=${playlistId}`;
-        iframe.title = "YouTube video player";
-        iframe.frameBorder = "0";
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-
-        // Append iframe to the container
-        document.getElementById("video-container").appendChild(iframe);
-    </script>
+                // Insert iframe into the page
+                const container = document.getElementById("video-container");
+                container.innerHTML = ""; // Clear loading text
+                container.appendChild(iframe);
+            } else {
+                document.getElementById("video-container").innerText = "Error loading video.";
+            }
+        })
+        .catch(error => {
+            console.error("Error fetching video ID:", error);
+            document.getElementById("video-container").innerText = "Failed to load video.";
+        });
+</script>
 
 </body>
 </html>
