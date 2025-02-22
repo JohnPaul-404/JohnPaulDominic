@@ -15,15 +15,19 @@ if ($conn->connect_error) {
     die(json_encode(["error" => "Database connection failed"]));
 }
 
-// Fetch the latest video ID
-$sql = "SELECT video_id FROM videos ORDER BY id DESC LIMIT 1";
+// Fetch multiple video IDs (e.g., latest 5 videos)
+$sql = "SELECT video_id FROM videos ORDER BY id DESC LIMIT 5";
 $result = $conn->query($sql);
 
+$videoIds = [];
+
 if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    echo json_encode(["videoId" => $row["video_id"]]);
+    while ($row = $result->fetch_assoc()) {
+        $videoIds[] = $row["video_id"];
+    }
+    echo json_encode(["videoIds" => $videoIds]);
 } else {
-    echo json_encode(["error" => "No video found"]);
+    echo json_encode(["error" => "No videos found"]);
 }
 
 // Close connection
