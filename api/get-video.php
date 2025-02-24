@@ -1,6 +1,6 @@
 <?php
 header("Content-Type: application/json");
-
+//john
 // Database credentials
 $host = "localhost"; // Change if needed
 $user = "heconseq_johnpauldominic";
